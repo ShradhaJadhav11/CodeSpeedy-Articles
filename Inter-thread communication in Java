@@ -1,0 +1,56 @@
+package java;
+class MobileRecharge
+{
+ int wallet = 400;
+ //method to re-charge mobile
+ synchronized void rechargeOf(int amount)
+ {
+  //if wallet money is less, then it will wait for adding money in wallet
+  if(wallet<amount)
+  {
+   System.out.println("less money in wallet, waiting for addition of money...");
+   try
+   {
+    wait();
+   }
+   catch(Exception e)
+   {
+   }
+  }
+  //if money is sufficient then recharge will be done & amount will be debited from wallet
+  wallet-=amount;
+  System.out.println("Recharge is successful...!!!")
+  System.out.println("Remaining money in wallet is : "+wallet);
+ }
+ //method for adding money into the wallet
+ synchronized void addingMoneyInWallet(int amount)
+ {
+  wallet+=amount;
+  System.out.println("Money added in wallet...");
+  notify();
+ }
+}
+//main class
+class ThreadExample
+{
+ public static void main(String[] args)
+ {
+  final MobileRecharge mr = new MobileRecharge();
+  new Thread()
+  {
+   public void run()
+   {
+    //recharging mobile
+    mr.rechargeOf(500);
+   }
+  }.start();
+  new Thread()
+  {
+   public void run()
+   {
+    //adding money into wallet
+    mr.addingMoneyInWallet(500);
+   }
+  }.start();
+ }
+}
